@@ -66,6 +66,16 @@ background = transform.scale(image.load(img_back), (win_width, win_height))
 
 ship = Player(img_hero, 5, win_height - 100, 80, 100, 10)
 bullets = sprite.Group()
+monsters = sprite.Group()
+
+for i in range(1, 6):
+    monster = Enemy(img_enemy, randint(80, win_width-80), -60, 80, 50, randint(1, 5))
+    monsters.add(monster)
+font.init()
+font1 = font.Font(None, 80)
+font2 = font.Font(None, 36)
+win = font1.render("You win!", True, (255, 255, 255))
+lose = font1.render("You lose!", True, (180, 0, 0))
 
 finish = False
 
@@ -81,7 +91,20 @@ while run:
         window.blit(background, (0, 0))
         ship.update()
         bullets.update()
+        monsters.update()
+        text = font2.render("Rahunok:" + str(score), True, (255, 255, 255))
+        window.blit(text, (10, 20))
+        text_lose = font2.render("Propystili:" + str(lost), True, (255, 255, 255))
         ship.reset()
         bullets.draw(window)
+        monsters.draw(window)
+        collides = sprite.groupcollide(monsters, bullets, True, True)
+
+        for c in collides:
+            score += 1
+            monster = Enemy(img_enemy, randint(80, win_width-80), -40, 80, 50, randint(1, 5))
+
+        monsters.add(monster)
+        
         display.update()
     time.delay(50)
